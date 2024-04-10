@@ -41,3 +41,4 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Tutos
 
 - https://dev.to/hpouyanmehr/nextjs-mui-v5-typescript-tutorial-and-starter-3pab
+- https://colinhacks.com/essays/nextjs-firebase-authentication

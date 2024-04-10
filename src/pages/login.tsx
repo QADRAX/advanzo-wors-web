@@ -1,12 +1,12 @@
-import { useAuthContext } from '@/client/context/AuthSessionContext';
-import { auth } from '@/client/firebaseClient';
-import { onlyAuthenticateUsers } from '@/server/auth/authentication';
 import { ANIMATION_VERTICAL_FADE } from '@/styles/animations';
 import styled from '@emotion/styled';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Container, IconButton, Stack, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import type { NextPage } from 'next';
 import Head from 'next/head';
+import GoogleIcon from '@mui/icons-material/Google';
+import React from 'react';
+import { useAuthContext } from '@/client/context/AuthSessionContext';
 
 const RootStyle = styled("div")({
   background: "rgb(228 249 239)",
@@ -29,10 +29,17 @@ const ContentStyle = styled("div")({
   background: "#fff",
 });
 
-const Home: NextPage = () => {
-  const { signout, user } = useAuthContext();
+const Login: NextPage = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const logout = async () => signout();
+  const { signinWithGoogle } = useAuthContext();
+
+  const googleSignIn = async () => {
+      setIsLoading(true);
+      await signinWithGoogle();
+      window.location.href = '/';
+  };
+
 
   return (
     <RootStyle>
@@ -48,16 +55,32 @@ const Home: NextPage = () => {
 
           <HeadingStyle component={motion.div} {...ANIMATION_VERTICAL_FADE}>
             <Typography variant="h5" sx={{ color: "text.secondary", mb: 5 }}>
-              Welcome {user?.displayName}
+              Login to Advanzo Wors Web
               <Typography variant="caption" sx={{ color: "text.secondary", ml: 1 }}>
                 {process.env.version}
               </Typography>
             </Typography>
           </HeadingStyle>
 
-          <Button variant="contained" fullWidth onClick={logout}>
-            Logout
-          </Button>
+          <Box component={motion.div} {...ANIMATION_VERTICAL_FADE}>
+            <Stack direction="row" spacing={2}>
+              <IconButton
+                sx={{
+                  border: "2px solid #ccc",
+                  borderRadius: "5px",
+                  padding: "0.5675rem",
+                  flex: 1,
+                }}
+                disabled={isLoading}
+                color="primary"
+                onClick={googleSignIn}>
+                Login with Google
+                <GoogleIcon sx={{
+                  ml: 1,
+                }} />
+              </IconButton>
+            </Stack >
+          </Box>
 
         </ContentStyle>
 
@@ -67,6 +90,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home;
-
-export const getServerSideProps = onlyAuthenticateUsers;
+export default Login
